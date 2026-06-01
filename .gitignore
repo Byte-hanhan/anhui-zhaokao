@@ -1,0 +1,11 @@
+node_modules/
+data/
+*.db
+*.sqlite
+server.log
+.DS_Store
+.vscode/
+.workbuddy/
+软著材料/
+*.pyc
+__pycache__/

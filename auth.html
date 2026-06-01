@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="安徽招考网 - 用户登录 / 注册">
+  <title>登录 / 注册 - 安徽招考网</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ---- Auth Page Specific Styles ---- */
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-10) var(--space-4);
+      background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 50%, #EDF2F7 100%);
+      transition: background var(--transition-normal);
+    }
+
+    [data-theme="dark"] .auth-main {
+      background: linear-gradient(135deg, #1A202C 0%, #2D3748 50%, #1A202C 100%);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--color-surface);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-10) var(--space-10);
+      border: 1px solid var(--color-border-light);
+      transition: background var(--transition-normal);
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+      text-decoration: none;
+      color: var(--color-text);
+    }
+
+    .auth-logo__icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--color-accent), #4299E1);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .auth-logo__name {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+    }
+
+    /* Tab Switch */
+    .auth-tabs {
+      display: flex;
+      background: var(--color-bg);
+      border-radius: var(--radius-lg);
+      padding: var(--space-1);
+      margin-bottom: var(--space-8);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      border: none;
+      background: transparent;
+    }
+
+    .auth-tab.active {
+      background: var(--color-surface);
+      color: var(--color-accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Form */
+    .auth-panel {
+      display: none;
+    }
+
+    .auth-panel.active {
+      display: block;
+    }
+
+    .auth-field {
+      margin-bottom: var(--space-5);
+    }
+
+    .auth-label {
+      display: block;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text);
+      margin-bottom: var(--space-2);
+    }
+
+    .auth-label .required {
+      color: var(--color-error);
+      margin-left: 2px;
+    }
+
+    .auth-input-wrap {
+      position: relative;
+    }
+
+    .auth-input-wrap svg {
+      position: absolute;
+      left: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-4) + 18px + var(--space-3));
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: var(--font-size-sm);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .auth-input:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-light);
+      outline: none;
+    }
+
+    .auth-input.error {
+      border-color: var(--color-error);
+      box-shadow: 0 0 0 3px rgba(229,62,62,0.1);
+    }
+
+    .auth-input-error {
+      display: none;
+      font-size: var(--font-size-xs);
+      color: var(--color-error);
+      margin-top: var(--space-1);
+    }
+
+    .auth-input-error.show {
+      display: block;
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      background: var(--color-accent);
+      color: #fff;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      border: none;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      margin-top: var(--space-6);
+    }
+
+    .auth-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .auth-btn:active {
+      transform: scale(0.98);
+    }
+
+    .auth-btn .btn-spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .auth-btn.loading .btn-text { display: none; }
+    .auth-btn.loading .btn-spinner { display: block; }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    .auth-divider span {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+
+    .auth-footer-note {
+      text-align: center;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--space-6);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .auth-footer-note a {
+      color: var(--color-accent);
+    }
+
+    /* Success Banner */
+    .auth-success {
+      display: none;
+      text-align: center;
+      padding: var(--space-8);
+    }
+
+    .auth-success.show {
+      display: block;
+    }
+
+    .auth-success__icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(72,187,120,0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-5);
+      color: var(--color-success);
+    }
+
+    .auth-success__icon svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .auth-success__title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text);
+      margin-bottom: var(--space-2);
+    }
+
+    .auth-success__desc {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-6);
+    }
+
+    /* User avatar in header */
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+      border: 2px solid var(--color-border);
+      transition: border-color var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .user-avatar:hover {
+      border-color: var(--color-accent);
+      color: #fff;
+    }
+
+    @media (max-width: 767px) {
+      .auth-card {
+        padding: var(--space-8) var(--space-6);
+        border-radius: var(--radius-lg);
+      }
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="site-logo">
+        <div class="site-logo__icon">皖</div>
+        <span>安徽招考</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          首页
+        </a>
+        <a href="list.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          全部公告
+        </a>
+        <a href="about.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          关于我们
+        </a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" aria-label="切换主题">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Main -->
+  <main class="auth-main">
+    <div class="auth-card animate-fade-in-up">
+
+      <!-- Logo -->
+      <a href="index.html" class="auth-logo">
+        <div class="auth-logo__icon">皖</div>
+        <span class="auth-logo__name">安徽招考</span>
+      </a>
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs" id="auth-tabs">
+        <button class="auth-tab active" data-panel="login" onclick="switchPanel('login')">登录</button>
+        <button class="auth-tab" data-panel="register" onclick="switchPanel('register')">注册</button>
+      </div>
+
+      <!-- Login Panel -->
+      <div class="auth-panel active" id="panel-login">
+        <form id="login-form" onsubmit="handleLogin(event)">
+          <div class="auth-field">
+            <label class="auth-label" for="login-username">用户名 / 账号<span class="required">*</span></label>
+            <div class="auth-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" class="auth-input" id="login-username" placeholder="请输入账号或用户名" autocomplete="username" required>
+            </div>
+            <span class="auth-input-error" id="login-username-err"></span>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="login-password">密码<span class="required">*</span></label>
+            <div class="auth-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" class="auth-input" id="login-password" placeholder="请输入密码" autocomplete="current-password" required>
+            </div>
+            <span class="auth-input-error" id="login-password-err"></span>
+          </div>
+          <span class="auth-input-error" id="login-global-err" style="display:block;text-align:center;margin-top:-8px;"></span>
+          <button type="submit" class="auth-btn" id="login-btn">
+            <span class="btn-text">登 录</span>
+            <div class="btn-spinner"></div>
+          </button>
+        </form>
+        <div class="auth-divider"><span>或</span></div>
+        <button class="auth-btn" style="background:#07C160;margin-top:0;" onclick="showWxQrLogin()">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18z"/></svg>
+          微信扫码登录
+        </button>
+        </form>
+        <p class="auth-footer-note">还没有账号？<a href="#" onclick="switchPanel('register');return false;">立即注册</a>，完全免费</p>
+      </div>
+
+      <!-- Register Panel -->
+      <div class="auth-panel" id="panel-register">
+        <form id="register-form" onsubmit="handleRegister(event)">
+          <div class="auth-field">
+            <label class="auth-label" for="reg-nickname">昵称<span class="required">*</span></label>
+            <div class="auth-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" class="auth-input" id="reg-nickname" placeholder="你的昵称（2-12个字符）" autocomplete="nickname" required>
+            </div>
+            <span class="auth-input-error" id="reg-nickname-err"></span>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-username">账号<span class="required">*</span></label>
+            <div class="auth-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <input type="text" class="auth-input" id="reg-username" placeholder="字母、数字，4-20 位" autocomplete="username" required>
+            </div>
+            <span class="auth-input-error" id="reg-username-err"></span>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-password">密码<span class="required">*</span></label>
+            <div class="auth-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" class="auth-input" id="reg-password" placeholder="至少 6 位" autocomplete="new-password" required>
+            </div>
+            <span class="auth-input-error" id="reg-password-err"></span>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-password2">确认密码<span class="required">*</span></label>
+            <div class="auth-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" class="auth-input" id="reg-password2" placeholder="再次输入密码" autocomplete="new-password" required>
+            </div>
+            <span class="auth-input-error" id="reg-password2-err"></span>
+          </div>
+          <span class="auth-input-error" id="reg-global-err" style="display:block;text-align:center;margin-top:-8px;"></span>
+          <button type="submit" class="auth-btn" id="register-btn">
+            <span class="btn-text">注册并登录</span>
+            <div class="btn-spinner"></div>
+          </button>
+        </form>
+        <p class="auth-footer-note">已有账号？<a href="#" onclick="switchPanel('login');return false;">立即登录</a></p>
+      </div>
+
+      <!-- Success State -->
+      <div class="auth-success" id="auth-success">
+        <div class="auth-success__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 class="auth-success__title" id="success-title">登录成功！</h2>
+        <p class="auth-success__desc" id="success-desc">正在跳转...</p>
+        <a href="index.html" class="auth-btn" style="text-decoration:none;display:flex;justify-content:center;">返回首页</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 微信扫码登录弹窗 -->
+  <div class="modal-overlay" id="wx-login-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;flex-direction:column;">
+    <div style="background:#fff;border-radius:12px;padding:24px;max-width:320px;width:90%;text-align:center;">
+      <h3 style="margin:0 0 16px;">微信扫码登录</h3>
+      <img id="wx-qr-img" src="" style="width:200px;height:200px;" alt="二维码">
+      <p style="font-size:13px;color:#718096;margin-top:12px;" id="wx-qr-msg">正在生成二维码...</p>
+      <button onclick="document.getElementById('wx-login-modal').style.display='none'" style="margin-top:12px;background:#EDF2F7;border:none;padding:8px 24px;border-radius:8px;cursor:pointer;">关闭</button>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    // ---- Auth Logic (API版) ----
+    const SESSION_KEY = 'ahzk_session';
+    const API_BASE = '/api';
+
+    async function apiCall(path, body) {
+      try {
+        const resp = await fetch(API_BASE + path, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify(body)
+        });
+        return await resp.json();
+      } catch (e) {
+        return { success: false, message: '网络请求失败，请稍后重试' };
+      }
+    }
+
+    function setSession(user, token) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+      if (token) localStorage.setItem('ahzk_token', token);
+    }
+
+    function switchPanel(panel) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.panel === panel));
+      document.querySelectorAll('.auth-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + panel));
+      clearErrors();
+    }
+
+    function clearErrors() {
+      document.querySelectorAll('.auth-input-error').forEach(el => { el.textContent = ''; el.classList.remove('show'); });
+      document.querySelectorAll('.auth-input').forEach(el => el.classList.remove('error'));
+    }
+
+    function showError(fieldId, msg) {
+      const errEl = document.getElementById(fieldId + '-err');
+      const inputEl = document.getElementById(fieldId);
+      if (errEl) { errEl.textContent = msg; errEl.classList.add('show'); }
+      if (inputEl) inputEl.classList.add('error');
+    }
+
+    function showGlobalError(panelPrefix, msg) {
+      const el = document.getElementById(panelPrefix + '-global-err');
+      if (el) { el.textContent = msg; el.classList.add('show'); }
+    }
+
+    function showSuccess(title, desc) {
+      document.getElementById('auth-tabs').style.display = 'none';
+      document.querySelectorAll('.auth-panel').forEach(p => p.style.display = 'none');
+      document.getElementById('success-title').textContent = title;
+      document.getElementById('success-desc').textContent = desc;
+      document.getElementById('auth-success').classList.add('show');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      clearErrors();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      let valid = true;
+      if (!username) { showError('login-username', '请输入账号'); valid = false; }
+      if (!password) { showError('login-password', '请输入密码'); valid = false; }
+      if (!valid) return;
+
+      const btn = document.getElementById('login-btn');
+      btn.classList.add('loading');
+
+      const result = await apiCall('/auth/login', { username, password });
+      btn.classList.remove('loading');
+
+      if (result.success) {
+        setSession(result.user, result.token);
+        if (result.user.role === 'admin') {
+          showSuccess('登录成功！', '欢迎回来，正在跳转到管理后台...');
+          setTimeout(() => { window.location.href = 'admin.html'; }, 1200);
+        } else {
+          showSuccess('登录成功！', '欢迎回来，' + (result.user.nickname || result.user.username) + '！正在跳转...');
+          setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+        }
+      } else {
+        showGlobalError('login', result.message || '账号或密码错误，请重试');
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      clearErrors();
+
+      const nickname = document.getElementById('reg-nickname').value.trim();
+      const username = document.getElementById('reg-username').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const password2 = document.getElementById('reg-password2').value;
+
+      let valid = true;
+      if (!nickname || nickname.length < 2 || nickname.length > 12) { showError('reg-nickname', '昵称需为 2-12 个字符'); valid = false; }
+      if (!username || username.length < 4 || username.length > 20) { showError('reg-username', '账号需为 4-20 位字母或数字'); valid = false; }
+      if (!/^[a-zA-Z0-9_]+$/.test(username)) { showError('reg-username', '账号只能包含字母、数字和下划线'); valid = false; }
+      if (!password || password.length < 6) { showError('reg-password', '密码至少 6 位'); valid = false; }
+      if (password !== password2) { showError('reg-password2', '两次输入的密码不一致'); valid = false; }
+      if (!valid) return;
+
+      const btn = document.getElementById('register-btn');
+      btn.classList.add('loading');
+
+      const result = await apiCall('/auth/register', { username, nickname, password });
+      btn.classList.remove('loading');
+
+      if (result.success) {
+        setSession(result.user, result.token);
+        showSuccess('注册成功！', '欢迎加入，' + (result.user.nickname || result.user.username) + '！正在跳转到首页...');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+      } else {
+        if (result.message && result.message.includes('已存在')) {
+          showError('reg-username', result.message);
+        } else {
+          showGlobalError('reg', result.message || '注册失败，请重试');
+        }
+      }
+    }
+
+    // Auto switch to register tab if URL param present
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'register') {
+      switchPanel('register');
+    }
+
+    // Redirect if already logged in
+    const session = (() => { try { return JSON.parse(localStorage.getItem('ahzk_session')); } catch(e) { return null; } })();
+    if (session) {
+      window.location.href = session.role === 'admin' ? 'admin.html' : 'index.html';
+    }
+
+    // ---- 微信扫码登录 ----
+    var _wxPollTimer = null;
+    window.showWxQrLogin = async function() {
+      var modal = document.getElementById('wx-login-modal');
+      if (!modal) return;
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      document.getElementById('wx-qr-msg').textContent = '正在生成二维码...';
+      try {
+        var genResp = await fetch(API_BASE + '/auth/qrcode-login/generate');
+        var gen = await genResp.json();
+        if (!gen.success) { document.getElementById('wx-qr-msg').textContent = '生成失败'; return; }
+        document.getElementById('wx-qr-img').src = '/api/auth/qrcode-login/qr?code=' + gen.code;
+        document.getElementById('wx-qr-msg').textContent = '请使用微信扫描二维码';
+        _wxPollTimer = setInterval(async function() {
+          try {
+            var resp = await fetch('/api/auth/qrcode-login/check?code=' + gen.code);
+            var check = await resp.json();
+            if (check.success) {
+              clearInterval(_wxPollTimer);
+              modal.style.display = 'none';
+              localStorage.setItem('ahzk_token', check.token);
+              localStorage.setItem('ahzk_session', JSON.stringify(check.user));
+              location.reload();
+            }
+          } catch(e) {}
+        }, 1500);
+        setTimeout(function() { clearInterval(_wxPollTimer); }, 180000);
+      } catch(e) {
+        document.getElementById('wx-qr-msg').textContent = '网络错误';
+      }
+    };
+
+    // apiCall 的 GET 变体
+    async function getApi(path) {
+      try {
+        var resp = await fetch('/api' + path);
+        return await resp.json();
+      } catch(e) { return { success: false }; }
+    }
+  </script>
+</body>
+</html>

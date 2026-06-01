@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>管理后台 - 安徽招考网</title>
+  <link rel="stylesheet" href="css/style.css?v=20260526">
+  <!-- Quill富文本编辑器CSS -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="css/admin.css?v=20260526">
+</head>
+<body class="admin-page">
+
+  <!-- Admin Header -->
+  <header class="admin-header">
+    <a href="index.html" class="admin-header__logo">
+      <div class="site-logo__icon">皖</div>
+      <span>安徽招考</span>
+      <span class="admin-header__badge">管理后台</span>
+    </a>
+    <div class="admin-header__right">
+      <button class="theme-toggle" aria-label="切换主题" style="flex-shrink:0;">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <div class="admin-header__user">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="admin-username-display">管理员</span>
+      </div>
+      <a href="index.html" class="admin-btn admin-btn--secondary" style="font-size:var(--font-size-xs);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        前台首页
+      </a>
+      <button class="admin-logout-btn" onclick="adminLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        退出
+      </button>
+    </div>
+  </header>
+
+  <!-- Admin Body -->
+  <div class="admin-body">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-nav-group">
+        <div class="admin-nav-group__label">概览</div>
+        <button class="admin-nav-item active" onclick="showPanel('dashboard')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          仪表盘
+        </button>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-group__label">内容管理</div>
+        <button class="admin-nav-item" onclick="showPanel('posts')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          招考公告
+        </button>
+        <button class="admin-nav-item" onclick="showPanel('about')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          关于我们
+        </button>
+        <button class="admin-nav-item" onclick="showPanel('users')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          用户管理
+        </button>
+        <button class="admin-nav-item" onclick="showPanel('settings');loadSiteSettings();">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          网站设置
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+
+      <!-- ===== Dashboard Panel ===== -->
+      <div class="admin-panel active" id="panel-dashboard">
+        <h1 class="admin-page-title">仪表盘</h1>
+        <p class="admin-page-subtitle">欢迎回来，管理员。以下是当前数据概览。</p>
+
+        <div class="admin-stats" id="admin-stats">
+          <!-- JS rendered -->
+        </div>
+
+        <div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-border-light);padding:var(--space-6);">
+          <h2 style="font-size:var(--font-size-md);font-weight:var(--font-weight-bold);margin-bottom:var(--space-4);">最近添加的公告</h2>
+          <div id="recent-posts-list"></div>
+          <div style="margin-top:var(--space-4);">
+            <button class="admin-btn admin-btn--secondary admin-btn--sm" onclick="showPanel('posts')">查看全部公告 →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Posts Panel ===== -->
+      <div class="admin-panel" id="panel-posts">
+        <h1 class="admin-page-title">招考公告管理</h1>
+        <p class="admin-page-subtitle">对公告进行增加、编辑、删除操作。</p>
+
+        <div class="admin-toolbar">
+          <div class="admin-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="admin-search-input" placeholder="搜索公告标题..." oninput="renderPostsTable()">
+          </div>
+          <select class="filter-select" id="admin-cat-filter" onchange="renderPostsTable()">
+            <option value="all">全部分类</option>
+            <option value="gwy">公务员</option>
+            <option value="sydw">事业单位</option>
+            <option value="js">教师招聘</option>
+            <option value="gq">国企招聘</option>
+            <option value="ylws">医疗卫生</option>
+            <option value="szyf">三支一扶</option>
+            <option value="bw">编外</option>
+          </select>
+          <div class="admin-toolbar__right">
+            <button class="admin-btn admin-btn--secondary" onclick="openShareModal()" style="font-size:var(--font-size-sm);background:var(--color-accent-bg);color:var(--color-accent);border-color:var(--color-accent);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              今日招考分享
+            </button>
+            <button class="admin-btn admin-btn--secondary" onclick="openImportModal()" style="font-size:var(--font-size-sm);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              导入数据
+            </button>
+            <button class="admin-btn admin-btn--primary" onclick="openPostModal(null)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              新增公告
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:40px;">ID</th>
+                <th>标题</th>
+                <th style="width:90px;">分类</th>
+                <th style="width:90px;">招聘类型</th>
+                <th style="width:105px;">发布日期</th>
+                <th style="width:80px;">浏览量</th>
+                <th style="width:140px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="posts-table-body">
+              <!-- JS rendered -->
+            </tbody>
+          </table>
+          <div class="admin-pagination">
+            <span id="posts-count-text"></span>
+            <div id="posts-pagination-btns" class="pagination" style="margin:0;padding:0;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== About Panel ===== -->
+      <div class="admin-panel" id="panel-about">
+        <h1 class="admin-page-title">关于我们 - 页面编辑</h1>
+        <p class="admin-page-subtitle">编辑网站"关于我们"页面的各个章节内容。</p>
+
+        <div style="display:flex;gap:var(--space-4);margin-bottom:var(--space-6);">
+          <button class="admin-btn admin-btn--primary" onclick="loadAboutData()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            重新加载
+          </button>
+          <button class="admin-btn admin-btn--secondary" onclick="saveAllAbout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polyline points="20 6 9 17 4 12"/></svg>
+            保存所有修改
+          </button>
+        </div>
+
+        <div id="about-sections">
+          <!-- 动态加载关于我们各章节 -->
+          <div style="text-align:center;padding:var(--space-8);color:var(--color-text-muted);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:var(--space-4);opacity:0.4;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <p>正在加载数据...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Users Panel ===== -->
+      <div class="admin-panel" id="panel-users">
+        <h1 class="admin-page-title">用户管理</h1>
+        <p class="admin-page-subtitle">查看已注册用户列表。</p>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>昵称</th>
+                <th>账号</th>
+                <th>注册时间</th>
+                <th>角色</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <!-- JS rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== Settings Panel ===== -->
+      <div class="admin-panel" id="panel-settings">
+        <h1 class="admin-page-title">网站设置</h1>
+        <p class="admin-page-subtitle">自定义网站外观，选择首页 Hero 区域的背景样式。</p>
+
+        <div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-border-light);padding:var(--space-6);margin-bottom:var(--space-6);">
+          <h3 style="font-size:var(--font-size-md);font-weight:var(--font-weight-bold);margin-bottom:var(--space-2);">首页 Hero 背景</h3>
+          <p style="font-size:var(--font-size-sm);color:var(--color-text-muted);margin-bottom:var(--space-5);">选择搜索框上方的背景样式，点击即可预览和保存。</p>
+          
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--space-4);" id="hero-bg-presets">
+            <!-- JS 渲染 -->
+          </div>
+
+          <button class="admin-btn admin-btn--primary" onclick="saveHeroBackground()" style="margin-top:var(--space-5);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polyline points="20 6 9 17 4 12"/></svg>
+            保存背景设置
+          </button>
+        </div>
+
+        <div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-border-light);padding:var(--space-6);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2);">
+            <h3 style="font-size:var(--font-size-md);font-weight:var(--font-weight-bold);margin:0;">打赏设置</h3>
+            <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;user-select:none;position:relative;" onclick="var cb=document.getElementById('donation-toggle');cb.checked=!cb.checked;toggleDonation(cb.checked)">
+              <span style="font-size:var(--font-size-sm);color:var(--color-text-muted);" id="donation-toggle-label">已关闭</span>
+              <div style="width:44px;height:24px;background:var(--color-border);border-radius:12px;transition:background 0.2s;" id="donation-toggle-bg">
+                <div style="width:20px;height:20px;background:#fff;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);margin:2px;" id="donation-toggle-dot"></div>
+              </div>
+              <input type="checkbox" id="donation-toggle" style="display:none;">
+            </label>
+          </div>
+          <p style="font-size:var(--font-size-sm);color:var(--color-text-muted);margin-bottom:var(--space-5);">上传微信/支付宝收款码，前台右侧抽屉展示。</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);">
+            <div>
+              <label style="font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);display:block;margin-bottom:var(--space-2);">收款码 1</label>
+              <div id="donation-preview-1" style="aspect-ratio:3/4;border:1px dashed var(--color-border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-2);overflow:hidden;background:var(--color-bg);">
+                <span style="color:var(--color-text-muted);font-size:var(--font-size-xs);">未上传</span>
+              </div>
+              <input type="file" accept="image/*" onchange="uploadDonationImage(1, this)" style="width:100%;">
+            </div>
+            <div>
+              <label style="font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);display:block;margin-bottom:var(--space-2);">收款码 2</label>
+              <div id="donation-preview-2" style="aspect-ratio:3/4;border:1px dashed var(--color-border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-2);overflow:hidden;background:var(--color-bg);">
+                <span style="color:var(--color-text-muted);font-size:var(--font-size-xs);">未上传</span>
+              </div>
+              <input type="file" accept="image/*" onchange="uploadDonationImage(2, this)" style="width:100%;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===== Post Edit Modal ===== -->
+  <div class="admin-modal-overlay" id="post-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal__header">
+        <h2 class="admin-modal__title" id="post-modal-title">新增公告</h2>
+        <button class="admin-modal__close" onclick="closePostModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="post-modal-form" onsubmit="savePost(event)">
+        <input type="hidden" id="post-id">
+        <div class="admin-form-row">
+          <label for="post-title">公告标题 <span style="color:var(--color-error)">*</span></label>
+          <input type="text" class="admin-form-input" id="post-title" placeholder="请输入完整公告标题" required>
+        </div>
+        <div class="admin-form-row admin-form-row--grid">
+          <div>
+            <label for="post-cat">分类 <span style="color:var(--color-error)">*</span></label>
+            <select class="admin-form-select" id="post-cat" required>
+              <option value="">请选择分类</option>
+              <option value="gwy">公务员</option>
+              <option value="sydw">事业单位</option>
+              <option value="js">教师招聘</option>
+              <option value="gq">国企招聘</option>
+              <option value="ylws">医疗卫生</option>
+              <option value="szyf">三支一扶</option>
+              <option value="bw">编外</option>
+            </select>
+          </div>
+          <div>
+            <label for="post-date">发布日期 <span style="color:var(--color-error)">*</span></label>
+            <input type="date" class="admin-form-input" id="post-date" required>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <label for="post-recruitment-type">招聘类型 <span style="font-weight:var(--font-weight-normal);color:var(--color-text-muted);">(选填)</span></label>
+          <select class="admin-form-select" id="post-recruitment-type">
+            <option value="">未分类</option>
+            <option value="xiaozhao">校招</option>
+            <option value="shezhao">社招</option>
+            <option value="both">校招+社招</option>
+          </select>
+        </div>
+        <div class="admin-form-row">
+          <label for="post-city">所属城市 <span style="font-weight:var(--font-weight-normal);color:var(--color-text-muted);">(选填)</span></label>
+          <select class="admin-form-select" id="post-city">
+            <option value="">全省</option>
+            <option value="hf">合肥</option>
+            <option value="wh">芜湖</option>
+            <option value="bb">蚌埠</option>
+            <option value="hn">淮南</option>
+            <option value="mas">马鞍山</option>
+            <option value="hb">淮北</option>
+            <option value="tl">铜陵</option>
+            <option value="aq">安庆</option>
+            <option value="hs">黄山</option>
+            <option value="cz">滁州</option>
+            <option value="fy">阜阳</option>
+            <option value="sz">宿州</option>
+            <option value="la">六安</option>
+            <option value="bz">亳州</option>
+            <option value="chiz">池州</option>
+            <option value="xc">宣城</option>
+          </select>
+        </div>
+        <div class="admin-form-row">
+          <label for="post-content">公告内容 <span style="font-weight:var(--font-weight-normal);color:var(--color-text-muted);">(选填)</span></label>
+          <div id="post-content-editor" style="height: 240px; border: 1px solid #e2e8f0; border-radius: 6px;"></div>
+          <textarea id="post-content" name="post-content" style="display:none;"></textarea>
+          <p style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">支持富文本编辑，可直接从Word等软件粘贴内容并保留格式。</p>
+        </div>
+        <div class="admin-form-row">
+          <label for="post-link">报名入口链接 <span style="font-weight:var(--font-weight-normal);color:var(--color-text-muted);">(选填)</span></label>
+          <input type="url" class="admin-form-input" id="post-link" placeholder="https://example.com/signup">
+          <p style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">填写官方报名链接，用户可在公告详情页点击"报名入口"直接跳转。</p>
+        </div>
+        <div class="admin-modal__footer">
+          <button type="button" class="admin-btn admin-btn--secondary" onclick="closePostModal()">取消</button>
+          <button type="submit" class="admin-btn admin-btn--primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            保存公告
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Import Data Modal ===== -->
+  <div class="admin-modal-overlay" id="import-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal__header">
+        <h2 class="admin-modal__title">导入招考数据</h2>
+        <button class="admin-modal__close" onclick="closeImportModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="admin-modal__body" style="margin-bottom:var(--space-6);">
+        <p style="font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-bottom:var(--space-4);">
+          粘贴从招考网站爬取的JSON格式数据。每条数据需包含：title（标题）、category（分类）、date（日期）、link（报名链接，选填）、content（内容，选填）。
+        </p>
+        <div class="admin-form-row">
+          <label for="import-data">JSON 数据</label>
+          <textarea class="admin-form-textarea" id="import-data" placeholder='[{"title":"公告标题","category":"gwy","date":"2026-05-09","link":"https://...","content":"公告内容..."}]' style="min-height:200px;"></textarea>
+        </div>
+        <div class="admin-form-row">
+          <label for="import-cat-default">默认分类（当数据无分类时使用）</label>
+          <select class="admin-form-select" id="import-cat-default">
+            <option value="gwy">公务员</option>
+            <option value="sydw" selected>事业单位</option>
+            <option value="js">教师招聘</option>
+            <option value="gq">国企招聘</option>
+            <option value="ylws">医疗卫生</option>
+            <option value="szyf">三支一扶</option>
+            <option value="bw">编外</option>
+          </select>
+        </div>
+        <div id="import-preview" style="margin-top:var(--space-4);"></div>
+      </div>
+      <div class="admin-modal__footer">
+        <button type="button" class="admin-btn admin-btn--secondary" onclick="closeImportModal()">取消</button>
+        <button type="button" class="admin-btn admin-btn--primary" onclick="doImport()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          导入数据
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Share Modal ===== -->
+  <div class="admin-modal-overlay" id="share-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal__header">
+        <h2 class="admin-modal__title" id="share-modal-title">今日招考分享</h2>
+        <button class="admin-modal__close" onclick="closeShareModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="admin-modal__body" style="margin-bottom:var(--space-6);">
+        <div id="share-loading" style="text-align:center;padding:var(--space-8);color:var(--color-text-muted);">加载中...</div>
+        <div id="share-content" style="display:none;">
+          <pre id="share-text" style="background:var(--color-bg);border:1px solid var(--color-border-light);border-radius:var(--radius-md);padding:var(--space-4);font-size:var(--font-size-sm);line-height:1.8;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;"></pre>
+        </div>
+        <div id="share-empty" style="display:none;text-align:center;padding:var(--space-8);color:var(--color-text-muted);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:var(--space-3);opacity:0.4;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>今日暂无新增公告</p>
+        </div>
+      </div>
+      <div class="admin-modal__footer" id="share-footer" style="display:none;">
+        <button type="button" class="admin-btn admin-btn--secondary" onclick="closeShareModal()">关闭</button>
+        <button type="button" class="admin-btn admin-btn--primary" id="share-copy-btn" onclick="copyShareText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          一键复制
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Confirm Delete Dialog ===== -->
+  <div class="admin-confirm-overlay" id="confirm-overlay">
+    <div class="admin-confirm">
+      <div class="admin-confirm__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </div>
+      <h3 class="admin-confirm__title">确认删除？</h3>
+      <p class="admin-confirm__desc">此操作不可恢复，该公告将被永久删除。</p>
+      <div class="admin-confirm__actions">
+        <button class="admin-btn admin-btn--secondary" onclick="closeConfirm()">取消</button>
+        <button class="admin-btn admin-btn--danger" id="confirm-delete-btn" onclick="doDelete()">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="admin-toast" id="admin-toast">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="admin-toast-msg"></span>
+  </div>
+
+  <script src="js/main.js?v=20260526"></script>
+  <!-- Quill富文本编辑器JS -->
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <script src="js/admin.js?v=20260526"></script>
+
+
+
+</body>
+</html>
